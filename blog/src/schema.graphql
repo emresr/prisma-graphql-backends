@@ -1,0 +1,86 @@
+type Query {
+   users: [User!]!
+   user(id: ID!): User!
+   posts: [Post!]!
+   post(id: ID!): Post!
+   likes: [Like!]!
+   like(id: ID!): Like!
+   commentstocomments: [CommentToComment!]!
+   ##
+   trendingPosts: [Post!]!
+   search(title: String): [Post!]!
+}
+type Mutation {
+   signup(email: String!, password: String!): AuthPayload
+   login(email: String!, password: String!): AuthPayload
+   updateUser(id: ID!, email: String!, name: String): User!
+   deleteUser(id: ID!): User!
+   createPost(title: String!): Post!
+   deletePost(id: Int!): Post!
+   updatePost(
+      id: Int!
+      title: String
+      content: String
+      published: Boolean
+   ): Post!
+   follow(id: ID!): Boolean!
+   unfollow(id: ID!): Boolean!
+   like(id: ID!): Boolean!
+   unlike(id: ID!): Boolean!
+
+   createComment(id: ID!, text: String!): Comment!
+   createCommentToComment(id: ID!, text: String!): CommentToComment!
+}
+
+type User {
+   id: ID!
+   email: String!
+   name: String
+   posts: [Post!]
+   password: String!
+   isFollowing: Boolean!
+   followedBy: [User!]
+   following: [User!]
+   likes: [Like!]
+   comments: [Comment!]
+   commentstocomments: [CommentToComment!]
+}
+
+type AuthPayload {
+   token: String
+   user: User
+}
+type Post {
+   id: ID!
+   title: String!
+   content: String
+   published: Boolean
+   author: User
+   authorId: Int
+   likes: [Like!]
+   comments: [Comment!]
+}
+type Like {
+   id: ID!
+   user: User!
+   userId: Int
+   post: Post!
+   postId: Int
+}
+type Comment {
+   id: ID!
+   text: String
+   user: User
+   userId: Int
+   post: Post
+   postId: Int
+   commentstotomments: [CommentToComment!]
+}
+type CommentToComment {
+   id: ID!
+   text: String
+   user: User
+   userId: Int
+   comment: Comment
+   commentId: Int
+}

@@ -1,0 +1,38 @@
+type Query {
+  users: [User!]!
+  user(id: ID!): User!
+  notes: [Note!]!
+  note(id: ID!): Note!
+}
+type Mutation {
+  signup(email: String!, password: String!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
+  updateUser(id: ID!, email: String!, name: String): User!
+  deleteUser(id: ID!): User!
+  #Note
+  deleteNote(id: Int!): Note!
+  createNote(title: String!, text: String!): Note!
+  editNote(id: ID!, title: String!, text: String!, color: String!): Note!
+}
+scalar DateTime
+
+type User {
+  id: ID!
+  email: String!
+  name: String
+  password: String!
+  notes: [Note!]
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
+type Note {
+  id: ID!
+  title: String!
+  text: String!
+  user: User
+  createdAt: DateTime!
+  color: String
+}

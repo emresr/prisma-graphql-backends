@@ -1,0 +1,14 @@
+.DS_Store
+
+/blog/node_modules
+/blog/prisma/migrations
+/blog/.env
+
+
+/notes/node_modules
+/notes/prisma/migrations
+/notes/.env
+
+/tournament-pairing/node_modules
+/tournament-pairing/prisma/migrations
+/tournament-pairing/.env
