@@ -1,0 +1,108 @@
+type Query {
+   me(pickedorders: Boolean): User!
+   users: [User!]!
+   user(id: ID!): User!
+
+   orders(picked: Boolean!, skip: Int!, take: Int!): [Order!]!
+   order(id: ID!): Order!
+
+   carts: [Cart!]
+   cart(id: ID!): Cart!
+
+   products: [Product!]!
+   product(id: ID!): Product!
+
+   stocks: [Stock!]!
+   stock(id: ID!): Stock!
+
+   cartproducts: [Cartproduct!]!
+   cartproduct(id: ID!): Cartproduct!
+}
+type Mutation {
+   signup(email: String!, password: String!, name: String): AuthPayload
+   login(email: String!, password: String!): AuthPayload
+   updateUser(id: ID!, email: String!, name: String): User!
+   deleteUser(id: ID!): User!
+   #order
+
+   setActiveCart(cartId: Int!, userId: ID!): User!
+   #cart
+   createCart(cartproductId: ID!): Cart!
+   updateCart(cartId: ID!, productId: ID!, amount: Int!): Cart!
+
+   # Order
+   createOrder(cartId: ID!): Order!
+   deleteOrder(id: Int!): Order!
+   updateOrder(orderId: ID!, ready: Boolean, picked: Boolean): Order!
+
+   #product
+   createProduct(name: String!, price: Float): Product!
+   #stock
+   createStock(productId: ID!, amount: Int): Stock!
+   deleteStock(id: ID!): Boolean
+   #cartproduct
+   createCartproduct(productId: ID!, amount: Int!): Cartproduct!
+   deleteCartproduct(cartproductId: ID!): Cartproduct!
+}
+type Subscription {
+   newOrder: Order
+   newCart: Cart
+   newCartProduct(cartId: ID!): Cartproduct
+}
+scalar DateTime
+
+type User {
+   id: ID!
+   email: String!
+   name: String
+   password: String!
+   orders: [Order!]
+   carts: [Cart!]
+   activeCart: Int
+   role: String
+}
+
+type AuthPayload {
+   token: String
+   user: User
+}
+type Order {
+   id: ID!
+   cart: Cart!
+   ready: Boolean
+   canceled: Boolean
+   picked: Boolean
+   createdAt: DateTime
+   user: User
+   pickTime: DateTime
+}
+type Cart {
+   id: ID!
+   user: User
+   cartproducts: [Cartproduct!]
+   total: Float
+   order: Order
+   activeuser: User
+}
+
+type Product {
+   id: ID!
+   stocks: [Stock!]
+   name: String
+   price: Float
+   cartproducts: [Cartproduct!]
+   totalStock: Int
+}
+type Stock {
+   id: ID!
+   product: Product!
+   amount: Int
+   createdAt: DateTime
+}
+type Cartproduct {
+   id: ID!
+   product: Product!
+   cart: Cart
+   amount: Int
+   price: Int
+}

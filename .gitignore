@@ -13,6 +13,6 @@
 /tournament-pairing/prisma/migrations
 /tournament-pairing/.env
 
-/coffee-order/node_modules
-/coffee-order/prisma/migrations
-/coffee-order/.env
+/coffee/node_modules
+/coffee/prisma/migrations
+/coffee/.env

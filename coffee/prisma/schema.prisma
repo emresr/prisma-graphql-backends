@@ -1,0 +1,80 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+model User {
+  id      Int      @default(autoincrement()) @id
+  email   String   @unique
+  password String
+  name    String?
+  role Role @default(USER)
+  orders  Order[]  @relation(name:"Orders")
+  carts  Cart[]  @relation(name:"Carts")
+  activeCart Int?
+    createdAt DateTime @default(now())
+
+}
+
+
+model Cart {
+  id      Int      @default(autoincrement()) @id
+  user      User     @relation(name:"Carts",fields: [userId], references: [id])
+  userId    Int
+  cartproducts Cartproduct[]
+  total  Float
+  order Order?
+  createdAt DateTime @default(now())
+
+}
+model Order {
+  id      Int      @default(autoincrement()) @id
+  cart    Cart   @relation(fields: [cartId], references: [id])
+  cartId   Int
+  ready Boolean  @default(false)
+  canceled Boolean @default(false)
+  picked   Boolean @default(false)
+  pickTime DateTime?
+  user      User?     @relation(name:"Orders",fields: [userId], references: [id])
+  userId    Int?
+  createdAt DateTime @default(now())
+}
+
+
+model Product {
+  id Int @default(autoincrement()) @id
+  name String?
+  price Float?
+  stocks   Stock[]
+  cartproducts Cartproduct[]
+  totalStock Int @default(0)
+    createdAt DateTime @default(now())
+
+}
+
+model Stock {
+  id Int @default(autoincrement()) @id
+  product      Product?    @relation(fields: [productId], references: [id])
+  productId    Int?
+  amount Int @default(0)
+  createdAt DateTime @default(now())
+}
+model Cartproduct {
+  id Int @default(autoincrement()) @id
+  product      Product?    @relation(fields: [productId], references: [id])
+  productId    Int?
+  price Int?
+  amount Int?
+  cart      Cart?    @relation(fields: [cartId], references: [id])
+  cartId    Int?
+}
+enum Role {
+  USER
+  ADMIN
+  EMPLOYEE
+}
