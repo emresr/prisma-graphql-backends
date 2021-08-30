@@ -1,0 +1,67 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+model Tournament {
+  id        Int      @default(autoincrement()) @id
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  type Type?
+  groups Group[]
+  started Boolean @default(false)
+  finished Boolean @default(false)
+    competators Competator[]
+
+}
+
+model User {
+  id      Int      @default(autoincrement()) @id
+  createdAt DateTime @default(now())
+  email   String   @unique
+  password String
+  name    String?
+  competators Competator[]
+
+}
+
+model Group {
+  id      Int      @default(autoincrement()) @id
+  name      String
+  tournament      Tournament?    @relation(fields: [tournamentId], references: [id])
+  tournamentId    Int?
+  competators Competator[]
+  matchs Match[]
+
+}
+model Competator {
+  id      Int      @default(autoincrement()) @id
+  createdAt DateTime @default(now())
+   tournament     Tournament?    @relation(fields: [tournamentId], references: [id])
+  tournamentId    Int?
+  group    Group?    @relation(fields: [groupId], references: [id])
+  groupId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  point   Int @default(0)
+  matchs Match[]
+  played  Int @default(0)
+}
+model Match {
+  id      Int      @default(autoincrement()) @id
+  when    DateTime?
+  competators Competator[]
+  finished Boolean @default(false)
+  winnerId Int?
+  group      Group?    @relation(fields: [groupId], references: [id])
+  groupId    Int?
+}
+enum Type {
+  GROUP
+  SINGLE
+  DOUBLE
+}

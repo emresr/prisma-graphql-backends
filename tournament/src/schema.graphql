@@ -1,0 +1,90 @@
+type Query {
+   me: User!
+   users: [User!]!
+   user(id: ID!): User!
+   groups: [Group!]!
+   group(id: ID!): Group!
+   tournaments(finished: Boolean!, skip: Int): [Tournament!]!
+   tournament(id: ID!): Tournament!
+   competators: [Competator!]!
+   competator(id: ID!): Competator!
+   matchs: [Match!]!
+   match(id: ID!): Match!
+   finishedMatchs(tournamentId: ID!): [Match!]!
+   ##
+}
+type Mutation {
+   signup(email: String!, password: String!): AuthPayload
+   login(email: String!, password: String!): AuthPayload
+   updateUser(id: ID!, email: String!, name: String): User!
+   deleteUser(id: ID!): User!
+
+   #Competator
+   createCompetator(tournamentId: ID!): Competator!
+   updateCompetator(groupId: ID, point: Int!, competatorId: ID!): Competator!
+   #Group
+   createGroup(name: String, tournamentId: ID!): Group!
+
+   #Tournament
+   createTournament(title: String!): Tournament!
+   updateTournament(finished: Boolean!, tournamentId: ID!): Tournament!
+
+   #Match
+   createMatch(competatorId: ID!, groupId: ID): Match!
+   updateMatch(userId: ID, matchId: ID!): Match!
+   finishMatch(matchId: ID!, finished: Boolean, winnerId: ID): Match!
+   addCompetatorToMatch(competatorId: ID!, matchId: ID!): Match!
+}
+type Subscription {
+   newCompetator(tournamentId: ID!): Competator!
+   matchFinished: Match!
+   competatorUpdated(competatorId: ID!): Competator!
+}
+scalar DateTime
+
+type User {
+   id: ID!
+   email: String!
+   name: String
+   createdAt: DateTime
+   competators: [Competator]
+}
+
+type AuthPayload {
+   token: String
+   user: User
+}
+type Competator {
+   id: ID!
+   createdAt: DateTime
+   user: User
+   group: Group
+   point: Int
+   matchs: [Match]
+   tournament: Tournament
+   played: Int
+}
+type Group {
+   id: ID!
+   name: String
+   tournament: Tournament
+   competators: [Competator]
+   matchs: [Match]
+}
+type Tournament {
+   id: ID!
+   title: String!
+   createdAt: DateTime
+   groups: [Group]
+   competators: [Competator]
+
+   finished: Boolean
+}
+
+type Match {
+   id: ID!
+   competators: [Competator]
+   finished: Boolean
+   group: Group
+   winnerId: Int
+}
