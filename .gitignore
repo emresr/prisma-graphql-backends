@@ -12,3 +12,7 @@
 /tournament-pairing/node_modules
 /tournament-pairing/prisma/migrations
 /tournament-pairing/.env
+
+/coffee-order/node_modules
+/coffee-order/prisma/migrations
+/coffee-order/.env
