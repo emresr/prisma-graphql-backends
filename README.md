@@ -1,1 +1,1 @@
-## Prisma GraphQL Backend Projects
+## Prisma GraphQL Backend Examples
